@@ -9,9 +9,7 @@ driver = webdriver.Chrome()
 driver.get("https://the-internet.herokuapp.com/download")
 
 elementos = driver.find_elements(By.XPATH, "//div[@class='example']/a")
-
 arquivos = []
-
 i = 0
 for elemento in elementos:
     if "2023" in elemento.text:

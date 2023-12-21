@@ -3,8 +3,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from openpyxl import Workbook, load_workbook
-from openpyxl.utils import get_column_letter
+from selenium.webdriver.chrome.options import Options
+import os
+
+chrome_options = Options()
+chrome_options.add_argument("user-data-dir=C:/Users/DESOUR10/AppData/Local/Google/Chrome/User Data")
 
 email = "datamanagementbrazil@whirlpool.com"
 senha = "Rh2020"
@@ -14,10 +17,10 @@ driver.get("https://apps.docusign.com/send/documents?type=envelopes")
 
 wait = WebDriverWait(driver, 10)
 
-#Teste de login e senha
+    #Teste de login e senha
 try:
     wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='Enter email']"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "input[placeholder='Enter email']"))
     )
 finally:
     driver.find_element(By.NAME, "email").send_keys(email, Keys.RETURN)
@@ -35,9 +38,6 @@ finally:
             code = input("Insira o código: ")
             if code != "":
                 driver.find_element(By.CSS_SELECTOR, "input[placeholder='Enter code']").send_keys(code, Keys.RETURN)
-            else:
                 print("Código não informado. Encerrando o processo")
                 quit()
-
-    
-arquivo = 'C:/Users/DESOUR10/Downloads/EnviarAvisosDeFérias - Layout.xlsm'
+            driver.refresh()
