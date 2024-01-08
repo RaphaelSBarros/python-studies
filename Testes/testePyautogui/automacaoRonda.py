@@ -37,6 +37,7 @@ while not erro:
     except:
         print("Deu no login 1")
         erro=True
+        raise
     else:
         loginSenior = driver.find_element(By.XPATH, "//input[@id='login']")
         loginSenior.send_keys(os.getenv('LOGIN'))
@@ -53,6 +54,7 @@ while not erro:
         except:
             print("Deu na senha 1")
             erro=True
+            raise
         else:
             passwdSenior = driver.find_element(By.XPATH, "//input[@id='passwd']")
             passwdSenior.send_keys(os.getenv('SENHA')) # Puxa a senha armazenada no .env
@@ -69,6 +71,7 @@ while not erro:
             except:
                 print("erro no acesso")
                 erro=True
+                raise
             else:
                 acesso = driver.find_element(By.CLASS_NAME, "storeapp-details-link")
                 acesso.click()
