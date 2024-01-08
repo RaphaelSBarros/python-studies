@@ -1,0 +1,5 @@
+site_name: My Docs
+nav:
+  - Home: index.md
+  - Settings: settings.md
+theme: readthedocs
