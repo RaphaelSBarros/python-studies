@@ -1,7 +1,6 @@
 ##Tentando automatizar o ronda com o Pyautogui
 
 # Etapas do processo
-from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
