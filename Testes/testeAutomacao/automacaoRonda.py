@@ -25,14 +25,12 @@ driver = webdriver.Chrome(options=options)
 driver.get("https://logincloud.senior.com.br/logon/LogonPoint/tmindex.html")
 
 ### Informar o login 
-
 try:
     element = WebDriverWait(driver, 10).until( #espera até 10s para que o elemento especificado apareça
         EC.presence_of_element_located((By.XPATH, "//input[@id='login']"))
     )
-except:
-    print("Deu no login 1")
-    raise
+except Exception as e:
+    print(f"Erro ao tentar executar código: {e}")
 else:
     loginSenior = driver.find_element(By.XPATH, "//input[@id='login']")
     loginSenior.send_keys(os.getenv('LOGIN'))
@@ -46,9 +44,8 @@ else:
         element = WebDriverWait(driver, 10).until( #espera até 10s para que o elemento especificado apareça
             EC.presence_of_element_located((By.XPATH, "//input[@id='passwd']"))
         )
-    except:
-        print("Deu na senha 1")
-        raise
+    except Exception as e:
+        print(f"Erro ao tentar executar código: {e}")
     else:
         passwdSenior = driver.find_element(By.XPATH, "//input[@id='passwd']")
         passwdSenior.send_keys(os.getenv('SENHA')) # Puxa a senha armazenada no .env
@@ -62,9 +59,8 @@ else:
             element = WebDriverWait(driver, 10).until( #espera até 10s para que o elemento especificado apareça
                 EC.presence_of_element_located((By.CLASS_NAME, "storeapp-details-link"))
             )
-        except:
-            print("erro no acesso")
-            raise
+        except Exception as e:
+            print(f"Erro ao tentar executar código: {e}")
         else:
             acesso = driver.find_element(By.CLASS_NAME, "storeapp-details-link")
             acesso.click()
@@ -78,7 +74,7 @@ else:
                 # Executa o arquivo usando subprocess
                 subprocess.run(ultimo_arquivo, shell=True)
             except Exception as e:
-                print(f"Erro ao tentar executar o arquivo: {e}")
+                print(f"Erro ao tentar executar código: {e}")
             else:
                 time.sleep(60)
                 pyautogui.PAUSE = 1
@@ -115,5 +111,6 @@ else:
                 time.sleep(2) # Esperar o carregamento da consulta
                 pyautogui.moveTo(1310, 120) ## Clicar em Mostrar (1310, 120)
                 pyautogui.doubleClick()
-                fim = time.time()
-                print(f'O código finalizou em {fim - inicio} segundos')
+                fim = time.time()          
+finally:
+    print(f'O código finalizou em {fim - inicio} segundos')
