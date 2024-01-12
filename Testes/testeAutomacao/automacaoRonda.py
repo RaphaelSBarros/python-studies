@@ -84,11 +84,12 @@ else:
                 pyautogui.write(os.getenv('PSSWRD'))
                 pyautogui.click(896, 336) # Clicar no Ok
                 time.sleep(20) # Esperar para logar no sistema
-                REs = ['929358', '929357'] ### Dados do usuário
-                dataI = '15122023' ### Dados do usuário
+                REs = ['106481','74740','70087','7975','60035','54257','54325','127626','31217'] ### Dados do usuário
+                dataI = '01012024' ### Dados do usuário
                 for count, RE in enumerate(REs):
-                    pyautogui.doubleClick(100, 100) # Clicar em Consultar Acessos
-                    time.sleep(5) # Esperar o carregamento da consulta
+                    if count == 0:
+                        pyautogui.doubleClick(100, 100) # Clicar em Consultar Acessos
+                        time.sleep(5) # Esperar o carregamento da consulta
                     pyautogui.click(405, 90) ## Clicar em Período (405, 90)
                     pyautogui.write(dataI) # Digitar a data de início 01022023
                     pyautogui.doubleClick(405, 115) ## Clicar em Local Físico (405, 115)
