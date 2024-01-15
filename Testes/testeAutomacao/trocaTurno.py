@@ -10,16 +10,21 @@ from tkinter import filedialog
 
 
 file_path = filedialog.askopenfilename() # Escolhe o diretório do arquivo
-
-planilha = load_workbook(file_path)
+planilha = load_workbook(filename=file_path, data_only= True) # Data_only evita o armazenamento das fórmulas
 aba_ativa = planilha.active
+
 
 # PERCORRE TODAS AS LINHA DA COLUNA C E CASO O VALOR FOR IGUAL A RC002-01 TROCA O VALOR DA LINHA CORRESPONDENTE NA COLUNA E PARA 'NOK'
 for celula in aba_ativa['C'][2:]:
-    if celula.value != None:
+    if celula.value is not None:
         linha = celula.row
-        aba_ativa[f'E{linha}'] = datetime.time(12,00,00) # Resolvendo problema na hora das fórmulas lerem os valores.
-        aba_ativa[f'F{linha}'] = datetime.time(18,15,00)
+#        ## Formatando os valores
+        id = aba_ativa[f'A{linha}'].value
+        dataVerificar = aba_ativa[f'B{3}'].value
+        dataVerificar = str(dataVerificar)
+        dataVerificar = f'{dataVerificar[8:10]}/{dataVerificar[5:7]}/{dataVerificar[:4]}'
+        dataAlvo = (aba_ativa[f'D{linha}'].value) ## ?????????????????????????????    
+        print(f'{id} - {dataVerificar} - {dataAlvo}')
 
 planilha.save("TesteOpenpy.xlsx")
 subprocess.run('TesteOpenpy.xlsx', shell=True)
