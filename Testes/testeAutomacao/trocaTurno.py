@@ -15,9 +15,10 @@ aba_ativa = planilha.active
 options = webdriver.ChromeOptions()
 options.add_argument(r"--user-data-dir=C:\Users\DESOUR10\AppData\Local\Google\Chrome\Selenium Data")
 options.add_argument(r'--profile-directory=Default')
-driver = webdriver.Chrome(options=options)
 
-driver.get("https://performancemanager8.successfactors.com/sf/customExternalModule?bplte_company=whirlpoolc&_s.crb=EsOgEIHB37k6ucolE3YkiE4vImirlYAXlhbuqs2HjaY%253d")
+#driver = webdriver.Chrome(options=options)
+
+#driver.get("https://performancemanager8.successfactors.com/sf/customExternalModule?bplte_company=whirlpoolc&_s.crb=EsOgEIHB37k6ucolE3YkiE4vImirlYAXlhbuqs2HjaY%253d")
 
 # PERCORRE TODAS AS LINHA DA COLUNA C E CASO O VALOR FOR IGUAL A RC002-01 TROCA O VALOR DA LINHA CORRESPONDENTE NA COLUNA E PARA 'NOK'
 for celula in aba_ativa['C'][2:]:

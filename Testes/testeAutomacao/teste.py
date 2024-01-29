@@ -10,82 +10,91 @@ from dotenv import load_dotenv # Segurança das senhas
 inicio = time.time()
 load_dotenv() # Carrega o .env
 
-continuar = False
+navegar = True
+
+organizar = True
 
 options = webdriver.ChromeOptions()
 options.add_argument(r"--user-data-dir=C:\Users\DESOUR10\AppData\Local\Google\Chrome\User Data")
 options.add_argument(r'--profile-directory=Default')
-driver = webdriver.Chrome(options=options)
 
-driver.get("https://apps.docusign.com/send/documents")
+if navegar:
+    driver = webdriver.Chrome(options=options)
 
-try:
-    element = WebDriverWait(driver, 10).until( #espera até 10s para que o elemento especificado apareça
-        EC.presence_of_element_located((By.XPATH, "//button[@type='submit']"))
-    )
-except:
-    print("não achou o botão")
-else:
-    entrarBtn = driver.find_element(By.XPATH, "//button[@type='submit']")
-    entrarBtn.click()
+    driver.get("https://apps.docusign.com/send/documents")
+
     try:
-        element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//button[@title='Concluído']"))
+        element = WebDriverWait(driver, 10).until( #espera até 10s para que o elemento especificado apareça
+            EC.presence_of_element_located((By.XPATH, "//button[@type='submit']"))
         )
     except:
-        print("Não achou o concluído")
+        print("não achou o botão")
     else:
-        concluidoBtn = driver.find_element(By.XPATH, "//button[@title='Concluído']") 
-        concluidoBtn.click()
-        time.sleep(2)
+        entrarBtn = driver.find_element(By.XPATH, "//button[@type='submit']")
+        entrarBtn.click()
         try:
             element = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, "//table"))
+                EC.presence_of_element_located((By.XPATH, "//button[@title='Concluído']"))
             )
         except:
-            print("não achou a lista")
+            print("Não achou o concluído")
         else:
-            tabela = driver.find_element(By.TAG_NAME, "tbody")
-            linhas = tabela.find_elements(By.TAG_NAME, "tr")
-            for linha in linhas:
-                print(linha.text)
-                try:
-                    element = WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located((By.TAG_NAME, "td"))
-                    )
-                except:
-                    print("não achou a tabela")
-                else:
-                    colunas = linha.find_elements(By.TAG_NAME, "td")
-                    ultimaCol = len(colunas) - 1
-                    if 'CONTRATO' in linha.text:
-                        colunas[ultimaCol].find_element(By.TAG_NAME, "button").click()
-                        try:
-                            element = WebDriverWait(driver, 10).until(
-                                EC.presence_of_element_located((By.XPATH, "//label/span/span[text()='Combinar todos os PDFs em um único arquivo']"))
-                            )
-                        except:
-                            print("não achou a lista")
-                        else:
-                            combinarPDF = driver.find_element(By.XPATH, "//label/span/span[text()='Combinar todos os PDFs em um único arquivo']")
-                            combinarPDF.click()
+            concluidoBtn = driver.find_element(By.XPATH, "//button[@title='Concluído']") 
+            concluidoBtn.click()
+            time.sleep(2)
+            try:
+                element = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, "//table"))
+                )
+            except:
+                print("não achou a lista")
+            else:
+                tabela = driver.find_element(By.TAG_NAME, "tbody")
+                linhas = tabela.find_elements(By.TAG_NAME, "tr")
+                for linha in linhas:
+                    try:
+                        element = WebDriverWait(driver, 10).until(
+                            EC.presence_of_element_located((By.TAG_NAME, "td"))
+                        )
+                    except:
+                        print("não achou a tabela")
+                    else:
+                        colunas = linha.find_elements(By.TAG_NAME, "td")
+                        data = colunas[4].find_element(By.TAG_NAME, "span").text
+                        nomeArquivo = colunas[2].find_element(By.TAG_NAME, "span").text
+                        #print(f'data: {data} / título: {nomeArquivo}') Exibir data e título dos arquivos
+                        if 'Aviso_Férias' in nomeArquivo:
+                            colunas[6].find_element(By.TAG_NAME, "button").click()
                             try:
                                 element = WebDriverWait(driver, 10).until(
-                                    EC.element_to_be_clickable((By.XPATH, "//div[3]/button"))
+                                    EC.presence_of_element_located((By.XPATH, "//label/span/span[text()='Combinar todos os PDFs em um único arquivo']"))
                                 )
-                                element.click()
                             except:
-                                print("inclicável")
-                                driver.quit()
-                            time.sleep(3)
-
-if continuar:
+                                print("não achou a lista")
+                            else:
+                                combinarPDF = driver.find_element(By.XPATH, "//label/span/span[text()='Combinar todos os PDFs em um único arquivo']")
+                                combinarPDF.click()
+                                try:
+                                    element = WebDriverWait(driver, 10).until(
+                                        EC.element_to_be_clickable((By.XPATH, "//div[3]/button"))
+                                    )
+                                    element.click()
+                                except:
+                                    print("inclicável")
+                                    driver.quit()
+                                else:
+                                    pass
+if organizar:
     folder_path = "C://Users//DESOUR10//Downloads//" #escolhe a pasta dos arquivos
     arquivos = os.listdir(folder_path) #lista todos os arquivos dentro da pasta escolhida
-
+    nome = 'Aviso_Férias'
+    #os.mkdir(folder_path+nome) # Cria uma pasta no destino
     for arquivo in arquivos: #para cada arquivo dentro da lista de arquivos
         if 'pdf' in arquivo: #caso tenha pdf no arquivo
-            if 'Aviso_Férias' in arquivo: # e caso tenha Compras no nome
+            if nome in arquivo: # e caso tenha Compras no nome
                 source_path = os.path.join(folder_path, arquivo) #pega o arquivo que se encaixa
-                destination_path = os.path.join(folder_path, "férias", arquivo) #cria uma variável com o destino do arquivo C://Users//DESOUR10//Downloads//07-16 - Copiar e Mover Arquivos//Compras//
-                os.rename(source_path, destination_path) #coloca o arquivo dentro da pasta de destino C://Users//DESOUR10//Downloads//07-16 - Copiar e Mover Arquivos//Compras//arquivo
+                if not '(1)' in arquivo: 
+                    destination_path = os.path.join(folder_path, nome, arquivo) #cria uma variável com o destino do arquivo
+                    os.rename(source_path, destination_path) #coloca o arquivo dentro da pasta de destino
+                else: ## Caso o arquivo esteja duplicado
+                    os.remove(source_path) ## O arquivo é excluído
