@@ -6,7 +6,7 @@ df = pd.read_excel(file_name) # Lê o arquivo
 columns = ['Data Acesso', 'Hora Acesso'] # Escolhe as colunas que deseja ler
 #print(df)
 
-dataI = '10012024' # Data retirada do RONDA
+dataI = 'Z' # Data retirada do RONDA
 dataI = f'{dataI[4:]}-{dataI[2:4]}-{dataI[:2]}' # Traduz a data para que o formato seja aceito pelo excel
 
 print(dataI) 
