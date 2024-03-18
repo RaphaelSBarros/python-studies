@@ -29,8 +29,8 @@ try:
     element = WebDriverWait(driver, 10).until( #espera até 10s para que o elemento especificado apareça
         EC.presence_of_element_located((By.XPATH, "//input[@id='login']"))
     )
-except Exception as e:
-    print(f"Erro ao tentar executar código: {e}")
+except RuntimeError as error:
+    print(f"Erro ao tentar executar código: {error}")
 else:
     loginSenior = driver.find_element(By.XPATH, "//input[@id='login']")
     loginSenior.send_keys(os.getenv('LOGIN'))

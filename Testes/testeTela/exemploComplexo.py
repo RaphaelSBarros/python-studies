@@ -145,8 +145,12 @@ class App(customtkinter.CTk):
         self.seg_button_1.set("Value 2")
 
     def open_input_dialog_event(self):
-        dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
-        print("CTkInputDialog:", dialog.get_input())
+        self.email = customtkinter.CTkInputDialog(text="Digite o E-mail:", title="CTkInputDialog")
+        self.email.grid(row=0, column=0, padx=(20, 20), pady=(20, 0), sticky="nsew")
+        print("CTkInputDialog:", self.email.get_input())
+        self.senha = customtkinter.CTkInputDialog(text="Digite a Senha:", title="CTkInputDialog", show="*")
+        self.senha.grid(row=1, column=0, padx=(20, 20), pady=(20, 0), sticky="nsew")
+        print("CTkInputDialog:", self.senha.get_input())
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)

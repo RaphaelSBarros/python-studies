@@ -2,7 +2,6 @@ from tkinter import filedialog
 from openpyxl import load_workbook
 import os
 import datetime
-
 folder_path = filedialog.askdirectory() # Escolhe o diretório do arquivo
 folder = os.listdir(folder_path)
 
@@ -10,6 +9,7 @@ conferencia=''
 contas=''
 dependentes=''
 eSocial=''
+forAcesso=''
 
 for file in folder:
     if 'Conferência' in file:
@@ -37,14 +37,18 @@ for file in folder:
         workForce = load_workbook(filename=file_path, data_only= True)
         workForce = workForce.active
         print('WorkForce ok')
+    elif 'ForAcesso' in file:
+        file_path = os.path.join(folder_path, file)
+        forAcesso = load_workbook(filename=file_path, data_only= True)
+        forAcesso = forAcesso.active
+        print('ForAcesso ok')
     elif 'Check' in file:
         file_path = os.path.join(folder_path, file)
-        checkList = load_workbook(filename=file_path)
-        check = checkList
-        checkList = checkList['Conferência']
+        check = load_workbook(filename=file_path)
+        checkList = load_workbook(filename=file_path, data_only= True)['Conferência']
         print('CheckList ok')
     else:
-        print("erro")
+        print(f"arquivo desconhecido: {file}")
 
 for re in checkList['B'][2:]:
     resConferidos = []
@@ -92,7 +96,7 @@ for re in checkList['B'][2:]:
                     turno = conferencia[f'K{linha}'].value
                     ## Formatando a carga horária
                     cargaHoraria = str(conferencia[f'J{linha}'].value)
-                    cargaHoraria = f'{cargaHoraria[:-2]} hs'
+                    cargaHoraria = f'{cargaHoraria} hs'
                     salario = conferencia[f'AE{linha}'].value
                     sindicato = conferencia[f'AB{linha}'].value
                     gremio='-'
@@ -111,6 +115,13 @@ for re in checkList['B'][2:]:
                         if int(re.value) == cell.value:
                             wf = workForce[f'CB{row}'].value
                             cargo = workForce[f'BJ{row}'].value
+                    fa='-'
+                    for cell in forAcesso['A'][1:]:
+                        row = cell.row
+                        if int(re.value) == cell.value:
+                            fa = forAcesso[f'X{row}'].value
+                    sap= ''
+                    sf = ''
                     varArray = [
                          dtInicio,
                          cargo,
@@ -135,9 +146,12 @@ for re in checkList['B'][2:]:
                          sindicato,
                          periculosidade,
                          es,
-                         wf
+                         wf,
+                         fa,
+                         sap,
+                         sf
                     ]
-                    for col in checkList[f'AC{re.row}':f'AZ{re.row}']:
+                    for col in check['Conferência'][f'AG{re.row}':f'BG{re.row}']:
                         for i, cell in enumerate(col):
                             cell.value = varArray[i]
                     resConferidos.append(re.value)
@@ -146,3 +160,4 @@ now = str(datetime.datetime.now())
 filename = f'Att-{now[8:10]}-{now[5:7]}.xlsx'
 savefile = os.path.join(folder_path, filename)
 check.save(f"{savefile}")
+print("salvou")
