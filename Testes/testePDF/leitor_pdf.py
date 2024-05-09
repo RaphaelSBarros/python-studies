@@ -2,7 +2,7 @@ from PrettyColorPrinter import add_printer
 from pdferli import get_pdfdf
 import numpy as np
 import pandas as pd
-path = r"C:\Users\DESOUR10\Downloads\contrato-teste.pdf"
+path = r"C:\Users\DESOUR10\Downloads\modelos contrato\CONTRATO DE TRABALHO - GABRIELA  ALONSO - 10231636.pdf"
 add_printer(1)
 df = get_pdfdf(path, normalize_content=False)
 

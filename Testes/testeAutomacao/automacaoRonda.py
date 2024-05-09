@@ -18,7 +18,7 @@ load_dotenv() # Carrega o .env
 ### Acessar o link -> https://logincloud.senior.com.br/logon/LogonPoint/tmindex.html
 
 options = webdriver.ChromeOptions()
-options.add_argument(r"--user-data-dir=C:\Users\DESOUR10\AppData\Local\Google\Chrome\User Data")
+options.add_argument(r"--user-data-dir=C:\Users\DESOUR10\AppData\Local\Google\Chrome\Test Data")
 options.add_argument(r'--profile-directory=Default')
 driver = webdriver.Chrome(options=options)
 
@@ -33,11 +33,7 @@ except RuntimeError as error:
     print(f"Erro ao tentar executar código: {error}")
 else:
     loginSenior = driver.find_element(By.XPATH, "//input[@id='login']")
-    loginSenior.send_keys(os.getenv('LOGIN'))
-    
-    ### Clicar em Log On
-    logOnBtn = driver.find_element(By.ID, "loginBtn")
-    logOnBtn.click()
+    loginSenior.send_keys(os.getenv('RONDAU'))
     
     ### Digitar a senha 
     try:
@@ -48,7 +44,7 @@ else:
         print(f"Erro ao tentar executar código: {e}")
     else:
         passwdSenior = driver.find_element(By.XPATH, "//input[@id='passwd']")
-        passwdSenior.send_keys(os.getenv('SENHA')) # Puxa a senha armazenada no .env
+        passwdSenior.send_keys(os.getenv('RONDAS')) # Puxa a senha armazenada no .env
         
         ### Clicar em Log On novamente
         logOnBtn = driver.find_element(By.ID, "loginBtn")
@@ -79,9 +75,9 @@ else:
                 time.sleep(60)
                 pyautogui.PAUSE = 1
                 pyautogui.click(640, 409) # Clicar na a área de login 
-                pyautogui.write(os.getenv('USER'))
+                pyautogui.write(os.getenv('foracessoU'))
                 pyautogui.click(640, 433) # Clicar na a área de senha 
-                pyautogui.write(os.getenv('PSSWRD'))
+                pyautogui.write(os.getenv('foracessoS'))
                 pyautogui.click(896, 336) # Clicar no Ok
                 time.sleep(20) # Esperar para logar no sistema
                 REs = ['106481','74740','70087','7975','60035','54257','54325','127626','31217'] ### Dados do usuário
