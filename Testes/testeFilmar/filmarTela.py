@@ -9,7 +9,7 @@ tamanho_tela = tuple(pyautogui.size()) #define a resolução do vídeo baseado n
 i = 1
 
 nomeVideo = f'video{i}.avi' ## Criar uma forma de mudar o nome do vídeo automaticamente
-
+i+=1
 codec = cv2.VideoWriter_fourcc(*"XVID") #codificador do vídeo AVI
 video = cv2.VideoWriter(nomeVideo, codec, fps, tamanho_tela) #nome do vídeo, codificador, taxa de quadros e resolução
 
