@@ -18,7 +18,6 @@ if yesterday.strftime("%A") == "Sunday":
 
 relatorio = None
 update = None
-
 for file in folder:
     file_path = os.path.join(folder_path, file)
     if "Relatório" in file:
@@ -34,14 +33,15 @@ titles = ["Dia", "ID Atividade", "Sistema", "Tipo", "Status","Descrição", "ATE
 for x in range(len(titles)):
     final_ws.cell(row=1, column=x+1, value=titles[x])
 
-existentes = []
 ## Atualizar chamados antigos
-updt_count=0
+existentes = [] # Armazenando quais os chamados existentes no relatório
+updt_count=0 # Contagem dos chamados com atualização
 for chamado in relatorio["B"][2:]:
     if chamado.value is None:
         break
     existentes.append(chamado.value)
     new_row = final_ws.max_row+1
+    # Preenchimento dos dados existentes na tabela final
     final_ws.cell(row=new_row, column=1, value=relatorio[f"A{chamado.row}"].value)
     final_ws.cell(row=new_row, column=2, value=chamado.value)
     final_ws.cell(row=new_row, column=3, value=relatorio[f"C{chamado.row}"].value)
@@ -50,20 +50,19 @@ for chamado in relatorio["B"][2:]:
     final_ws.cell(row=new_row, column=6, value=relatorio[f"F{chamado.row}"].value)
     final_ws.cell(row=new_row, column=7, value=relatorio[f"G{chamado.row}"].value)
     final_ws.cell(row=new_row, column=8, value=relatorio[f"H{chamado.row}"].value)
-    for atualizar in update["A"][1:]:
+    for atualizar in update["A"][1:]: # Trocando os dados já existentes com os atualizados pelo relatório jira
         if chamado.value == atualizar.value:
-            if update[f"F{atualizar.row}"].value in ("Concluído", "DEPLOY"):
+            if update[f"F{atualizar.row}"].value in ("Concluído", "DEPLOY"): # Verificação do status para se encaixar no padrão da planilha KPIs
                 final_ws.cell(row=new_row, column=5, value="Fechado")
                 final_ws.cell(row=new_row, column=8, value=update[f"O{atualizar.row}"].value)
             else:
                 final_ws.cell(row=new_row, column=5, value="Aberto")
             updt_count+=1
 
-add_count = 0
 # Adicionar Novos Chamados
-inicio2 = datetime.datetime.now()
+add_count = 0 # Cotagem dos novos chamados a serem inseridos
 for novos in update["A"][1:]:
-    if novos.value not in existentes:
+    if novos.value not in existentes: # Inserindo os novos dados
         new_row = final_ws.max_row+1
         final_ws.cell(row=new_row, column=1, value=yesterday)
         final_ws.cell(row=new_row, column=2, value=novos.value)
@@ -78,6 +77,5 @@ for novos in update["A"][1:]:
         final_ws.cell(row=new_row, column=8, value=update[f"O{novos.row}"].value)
         add_count+=1
 
-final_wb.save(f"{folder_path}/qa_projeto_fechado_att_{yesterday}.xlsx")
-fim1 = datetime.datetime.now()
-print(f"Primeiro Processo Finalizado em: {fim1 - inicio1}")
+final_wb.save(f"{folder_path}/qa_projeto_fechado_att_{yesterday}.xlsx") # Salva a nova tabela na mesma pasta que estavam os relatórios
+print(f"Projeto Finalizado com {updt_count} atualizações e {add_count} adições nos dados") # Apenas para conferência do total de informações
