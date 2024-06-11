@@ -1,9 +1,17 @@
 from tkinter import filedialog
 from openpyxl import load_workbook, Workbook
 import os
+import datetime
+
+# Funcionando
+
 final_wb = Workbook()
 final_ws = final_wb.active
 final_ws.title = "sonepar_support_report"
+
+yesterday=(datetime.date.today() - datetime.timedelta(days=1))
+if yesterday.strftime("%A") == "Sunday":
+    yesterday=(datetime.date.today() - datetime.timedelta(days=3))
 
 folder_path = filedialog.askdirectory()
 folder = os.listdir(folder_path)
@@ -68,4 +76,10 @@ for id_ritm in requisiton_data["B"][1:]:
         if id_chamado.value == id_ritm.value:
             final_ws.cell(row=new_row, column=11, value=bulk_sla[f"I{id_chamado.row}"].value)
             final_ws.cell(row=new_row, column=12, value=(bulk_sla[f"H{id_chamado.row}"].value/86400))
-final_wb.save("suporte_sonepar.xlsx")
+
+os.remove(f"{folder_path}/task_sla.xlsx")
+os.remove(f"{folder_path}/incident.xlsx")
+os.remove(f"{folder_path}/sc_req_item.xlsx")
+
+final_wb.save(f"{folder_path}/suporte_sonepar_att_{yesterday}.xlsx")
+print("Processo Finalizado!")
