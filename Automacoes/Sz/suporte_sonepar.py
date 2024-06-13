@@ -77,9 +77,9 @@ for id_ritm in requisiton_data["B"][1:]:
             final_ws.cell(row=new_row, column=11, value=bulk_sla[f"I{id_chamado.row}"].value)
             final_ws.cell(row=new_row, column=12, value=(bulk_sla[f"H{id_chamado.row}"].value/86400))
 
-os.remove(f"{folder_path}/task_sla.xlsx")
-os.remove(f"{folder_path}/incident.xlsx")
-os.remove(f"{folder_path}/sc_req_item.xlsx")
+#os.remove(f"{folder_path}/task_sla.xlsx")
+#os.remove(f"{folder_path}/incident.xlsx")
+#os.remove(f"{folder_path}/sc_req_item.xlsx")
 
 final_wb.save(f"{folder_path}/suporte_sonepar_att_{yesterday}.xlsx")
 print("Processo Finalizado!")

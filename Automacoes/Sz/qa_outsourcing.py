@@ -53,10 +53,9 @@ for file in folder:
                             elif "Sphere - Perú" in cell.value:
                                 final_ws.cell(row=new_row, column=x+2, value=r"SPHERE\PERU")
                             else:
-                                final_ws.cell(row=new_row, column=x+2, value=cell.value)
+                                final_ws.cell(row=new_row, column=x+2, value=cell.value.upper())
                         else:
-                            final_ws.cell(row=new_row, column=x+2, value=cell.value)
-        os.remove(file_path)                
+                            final_ws.cell(row=new_row, column=x+2, value=cell.value)               
         os.remove(xlsx_path)
-final_wb.save(f"{folder_path}/qa_outsourcing_att_{yesterday}.xlsx")
+final_wb.save(f"data/qa_outsourcing_att_{yesterday}.xlsx")
 print("Processo Finalizado!")

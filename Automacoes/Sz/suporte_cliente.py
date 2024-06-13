@@ -6,42 +6,67 @@ import os
 
 # Precisa automatizar isso?
 
-#file_path = filedialog.askopenfilename()
-file_path = "C:/Users/P0589/Downloads/Aquivos teste/Suporte_Cliente/20240605095042.csv"
-print(file_path)
+file_path = filedialog.askopenfilename()
+df = pd.read_csv(file_path, delimiter=";")
+xlsx_path = f"data/convfile.xlsx"
+df.to_excel(xlsx_path, index=False)
+relatorio = load_workbook(xlsx_path, data_only=True).active
+os.remove(xlsx_path)
 
 final_wb = Workbook()
-final_ws = final_wb.active
-final_ws.title = "suporte_cliente"
+int_final_ws = final_wb.active
+int_final_ws.title = "suporte_cliente_interno"
+final_wb.create_sheet("suporte_cliente_externo")
+ext_final_ws = final_wb["suporte_cliente_externo"]
 
-titles =["Dia", "Chamado", "Sistema", "Area", "Categoria", "Status", "Atendente", "Descrição", "Data de Fechamento", "SLA Primeiro Atendimento"]
+int_titles =["Dia", "Chamado", "Sistema", "Area", "Categoria", "Status", "Atendente", "Descrição", "Data de Fechamento", "SLA Primeiro Atendimento"]
+ext_titles =["Dia", "Chamado", "Sistema", "Cliente", "Categoria", "Status", "Descrição", "Atendente", "Data de Fechamento", "SLA Primeiro Atendimento"]
 
 yesterday=(datetime.date.today() - datetime.timedelta(days=1))
 if yesterday.strftime("%A") == "Sunday":
     yesterday=(datetime.date.today() - datetime.timedelta(days=3))
 
-for x in range(len(titles)):
-    final_ws.cell(row=1, column=x+1, value=titles[x])
+for x in range(len(int_titles)):
+    int_final_ws.cell(row=1, column=x+1, value=int_titles[x])
 
-df = pd.read_csv(filepath_or_buffer=file_path, sep=";")
-xlsx_path=f"{file_path[:-3]}xlsx"
-df.to_excel(xlsx_path, sheet_name="testing", index=False)
-ws = load_workbook(filename=xlsx_path, data_only=True).active
+for x in range(len(int_titles)):
+    ext_final_ws.cell(row=1, column=x+1, value=ext_titles[x])
 
-for sistema in ws["C"][1:]:
-    new_row = final_ws.max_row+1
-    final_ws.cell(row=new_row, column=1, value=yesterday)
-    final_ws.cell(row=new_row, column=2, value=ws[f"A{sistema.row}"].value)
-    if ws[f"F{sistema.row}"].value in ("Fechado pelo usuário", "Encerrado"):
-        final_ws.cell(row=new_row, column=6, value="Fechado")
+for cliente in relatorio["C"][1:]:
+    new_row = int_final_ws.max_row+1
+    if cliente.value == "SZ Soluções":
+        int_final_ws.cell(row=new_row, column=1, value=yesterday)
+        int_final_ws.cell(row=new_row, column=2, value= relatorio[f"A{cliente.row}"].value)
+        int_final_ws.cell(row=new_row, column=3, value= cliente.value)
+        int_final_ws.cell(row=new_row, column=4, value= "algo")
+        int_final_ws.cell(row=new_row, column=5, value= relatorio[f"E{cliente.row}"].value)
+        if relatorio[f"F{cliente.row}"].value in ("Encerrado"):
+            int_final_ws.cell(row=new_row, column=6, value="Fechado")
+        else:
+            int_final_ws.cell(row=new_row, column=6, value="Aberto")
+        int_final_ws.cell(row=new_row, column=7, value= relatorio[f"D{cliente.row}"].value)
+        int_final_ws.cell(row=new_row, column=8, value= relatorio[f"B{cliente.row}"].value)
+        int_final_ws.cell(row=new_row, column=9, value= relatorio[f"G{cliente.row}"].value)
+
+        abertura = relatorio[f"O{cliente.row}"].value.split(":")
+        atendimento = relatorio[f"N{cliente.row}"].value.split(":")
+        print(atendimento, abertura)
+        int_final_ws.cell(row=new_row, column=10, value= datetime.timedelta())
     else:
-        final_ws.cell(row=new_row, column=6, value="Aberto")
+        ext_final_ws.cell(row=new_row, column=1, value=yesterday)
+        ext_final_ws.cell(row=new_row, column=2, value= relatorio[f"A{cliente.row}"].value)
+        if "Sonepar" in cliente.value:
+            split = [x for x in cliente.value.split(" ") if len(x) > 1]
+            ext_final_ws.cell(row=new_row, column=3, value= split[0])
+            ext_final_ws.cell(row=new_row, column=4, value= split[1])
+        ext_final_ws.cell(row=new_row, column=5, value= relatorio[f"E{cliente.row}"].value)
+        if relatorio[f"F{cliente.row}"].value in ("Encerrado"):
+            ext_final_ws.cell(row=new_row, column=6, value="Fechado")
+        else:
+            ext_final_ws.cell(row=new_row, column=6, value="Aberto")
+        ext_final_ws.cell(row=new_row, column=7, value= relatorio[f"B{cliente.row}"].value)
+        ext_final_ws.cell(row=new_row, column=8, value= relatorio[f"D{cliente.row}"].value)
+        ext_final_ws.cell(row=new_row, column=9, value= relatorio[f"G{cliente.row}"].value)
+        ext_final_ws.cell(row=new_row, column=10, value= datetime.timedelta())
 
-    if sistema.value == "SZ Soluções":
-        final_ws.cell(row=new_row, column=7, value=ws[f"D{sistema.row}"].value)
-    else:
-        final_ws.cell(row=new_row, column=8, value=ws[f"D{sistema.row}"].value)
-        final_ws.cell(row=new_row, column=4, value=ws[f"C{sistema.row}"].value)
-        final_ws.cell(row=new_row, column=5, value=ws[f"E{sistema.row}"].value)
-
-final_wb.save(f"teste.xlsx")
+final_wb.save(f"data/suporte_cliente.xlsx")

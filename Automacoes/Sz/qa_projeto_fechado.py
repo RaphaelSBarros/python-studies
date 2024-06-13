@@ -77,5 +77,5 @@ for novos in update["A"][1:]:
         final_ws.cell(row=new_row, column=8, value=update[f"O{novos.row}"].value)
         add_count+=1
 
-final_wb.save(f"{folder_path}/qa_projeto_fechado_att_{yesterday}.xlsx") # Salva a nova tabela na mesma pasta que estavam os relatórios
+final_wb.save(f"data/qa_projeto_fechado_att_{yesterday}.xlsx") # Salva a nova tabela na mesma pasta que estavam os relatórios
 print(f"Projeto Finalizado com {updt_count} atualizações e {add_count} adições nos dados") # Apenas para conferência do total de informações
