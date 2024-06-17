@@ -27,7 +27,7 @@ for file in folder:
     if "att" in file:
         update = load_workbook(filename=file_path, data_only=True).active
 
-titles = ["Dia", "ID Chamado", "Sistema", "Cliente",
+titles = ["Dia", "ID Chamado", "Sistema", "Cliente", "Categoria",
           "Status", "Descrição", "Atendente", "Data Fechamento",
           "Aguardando", "Motivo", "SLA de Resolução %", "SLA de Resolução Tempo"] # Título das colunas
 for x in range(len(titles)):
@@ -40,18 +40,18 @@ for chamado in relatorio["B"][2:]:
         break
     existentes.append(chamado.value)
     new_row = final_ws.max_row+1
-    for row in final_ws[f"A{new_row}:L{new_row}"]:
+    for row in final_ws[f"A{new_row}:M{new_row}"]:
         for cell in row:
             final_ws.cell(row=new_row, column=cell.column, value=relatorio.cell(row=chamado.row, column=cell.column).value)
     for atualizar in update["B"][1:]:
-        if atualizar.value == chamado.value and update[f"E{atualizar.row}"].value != relatorio[f"E{chamado.row}"].value:
+        if atualizar.value == chamado.value and update[f"E{atualizar.row}"].value != relatorio[f"F{chamado.row}"].value:
             updt_count+=1
-            final_ws.cell(row=new_row, column=5, value=update[f"E{atualizar.row}"].value)
-            final_ws.cell(row=new_row, column=8, value=update[f"H{atualizar.row}"].value)
-            final_ws.cell(row=new_row, column=9, value=update[f"I{atualizar.row}"].value)
-            final_ws.cell(row=new_row, column=10, value=update[f"J{atualizar.row}"].value)
-            final_ws.cell(row=new_row, column=11, value=update[f"K{atualizar.row}"].value)
-            final_ws.cell(row=new_row, column=12, value=update[f"L{atualizar.row}"].value)
+            final_ws.cell(row=new_row, column=6, value=update[f"E{atualizar.row}"].value)
+            final_ws.cell(row=new_row, column=9, value=update[f"G{atualizar.row}"].value)
+            final_ws.cell(row=new_row, column=10, value=update[f"H{atualizar.row}"].value)
+            final_ws.cell(row=new_row, column=11, value=update[f"I{atualizar.row}"].value)
+            final_ws.cell(row=new_row, column=12, value=update[f"J{atualizar.row}"].value)
+            final_ws.cell(row=new_row, column=13, value=update[f"K{atualizar.row}"].value)
             print(f"Chamado Atualizado: {chamado.value}")
 
 add_count = 0
@@ -59,9 +59,12 @@ for novos in update["B"][1:]:
     if novos.value not in existentes:
         add_count+=1
         new_row = final_ws.max_row+1
-        for row in final_ws[f"A{new_row}:L{new_row}"]:
+        for row in final_ws[f"A{new_row}:D{new_row}"]:
             for cell in row:
                 final_ws.cell(row=new_row, column=cell.column, value=update.cell(row=novos.row, column=cell.column).value)
+        for row in final_ws[f"F{new_row}:M{new_row}"]:
+            for cell in row:
+                final_ws.cell(row=new_row, column=cell.column, value=update.cell(row=novos.row, column=cell.column-1).value)
         print(f"Chamado Adicionado: {novos.value}")
 
 final_wb.save(f"{folder_path}/atualizacao_sonepar.xlsx") # Salva a nova tabela na mesma pasta que estavam os relatórios
