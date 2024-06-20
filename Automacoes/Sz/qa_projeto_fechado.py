@@ -5,7 +5,7 @@ import os
 import datetime
 
 # Testar na proxima atualização
-folder_path = filedialog.askdirectory()
+folder_path = "C:/Users/P0589/Downloads/QA_Projeto_Fechado"
 folder = os.listdir(folder_path)
 inicio1 = datetime.datetime.now()
 final_wb = Workbook()

@@ -6,7 +6,7 @@ import os
 
 # Funcionando
 
-folder_path = filedialog.askdirectory()
+folder_path = "C:/Users/P0589/Downloads/QA_Outsourcing"
 folder = os.listdir(folder_path)
 
 final_wb = Workbook()

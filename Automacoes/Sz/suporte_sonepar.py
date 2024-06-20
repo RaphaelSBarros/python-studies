@@ -13,7 +13,7 @@ yesterday=(datetime.date.today() - datetime.timedelta(days=1))
 if yesterday.strftime("%A") == "Sunday":
     yesterday=(datetime.date.today() - datetime.timedelta(days=3))
 
-folder_path = filedialog.askdirectory()
+folder_path = "C:/Users/P0589/Downloads/Suporte_Sonepar"
 folder = os.listdir(folder_path)
 for file in folder:
     file_path = os.path.join(folder_path, file)

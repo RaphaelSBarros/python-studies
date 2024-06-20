@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import datetime
 
-folder_path = filedialog.askdirectory()
+folder_path = "C:/Users/P0589/Downloads/Suporte_Sonepar"
 folder = os.listdir(folder_path)
 
 final_wb = Workbook()
