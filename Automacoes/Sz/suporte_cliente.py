@@ -110,7 +110,7 @@ for cliente in relatorio["C"][1:]:
             ext_final_ws.cell(row=ext_new_row, column=3, value="BeeStock")
             ext_final_ws.cell(row=ext_new_row, column=4, value= relatorio[f"C{cliente.row}"].value)
         ext_final_ws.cell(row=ext_new_row, column=5, value= relatorio[f"E{cliente.row}"].value)
-        if relatorio[f"F{cliente.row}"].value in ("Encerrado"):
+        if relatorio[f"F{cliente.row}"].value in ("Encerrado", "Fechado pelo usuário"):
             ext_final_ws.cell(row=ext_new_row, column=6, value="Fechado")
         else:
             ext_final_ws.cell(row=ext_new_row, column=6, value="Aberto")
