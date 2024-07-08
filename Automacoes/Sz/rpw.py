@@ -29,7 +29,7 @@ for row in rpw_data["B"][1:]:
     if row.value != 0 and "," in row.value:
         rpws = row.value.replace(",", "").split(" ")
         for rpw in rpws:
-            if len(rpw) > 1:
+            if len(rpw) > 1 and "/" not in rpw:
                 new_row = ws.max_row+1
                 ws.cell(row=new_row, column=1, value=rpw_data[f"A{row.row}"].value)
                 ws.cell(row=new_row, column=2, value=rpw)
