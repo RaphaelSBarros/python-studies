@@ -37,7 +37,8 @@ int_titles =[
     ]
 ext_titles =[
         "Dia", 
-        "Chamado", 
+        "Chamado",
+        "ID Jira",
         "Sistema", 
         "Cliente", 
         "Categoria", 
@@ -102,22 +103,23 @@ for cliente in relatorio["C"][1:]:
     else:
         ext_final_ws.cell(row=ext_new_row, column=1, value=yesterday)
         ext_final_ws.cell(row=ext_new_row, column=2, value= relatorio[f"A{cliente.row}"].value)
+        ext_final_ws.cell(row=ext_new_row, column=3, value="") # ID JIRA
         if "Sonepar" in cliente.value:
             split = [x for x in cliente.value.split(" ") if len(x) > 1]
-            ext_final_ws.cell(row=ext_new_row, column=3, value= split[0])
-            ext_final_ws.cell(row=ext_new_row, column=4, value= split[1])
+            ext_final_ws.cell(row=ext_new_row, column=4, value= split[0])
+            ext_final_ws.cell(row=ext_new_row, column=5, value= split[1])
         else:
-            ext_final_ws.cell(row=ext_new_row, column=3, value="BeeStock")
-            ext_final_ws.cell(row=ext_new_row, column=4, value= relatorio[f"C{cliente.row}"].value)
-        ext_final_ws.cell(row=ext_new_row, column=5, value= relatorio[f"E{cliente.row}"].value)
+            ext_final_ws.cell(row=ext_new_row, column=4, value=relatorio[f"I{cliente.row}"].value)
+            ext_final_ws.cell(row=ext_new_row, column=5, value= relatorio[f"C{cliente.row}"].value)
+        ext_final_ws.cell(row=ext_new_row, column=6, value= relatorio[f"E{cliente.row}"].value)
         if relatorio[f"F{cliente.row}"].value in ("Encerrado", "Fechado pelo usuário"):
-            ext_final_ws.cell(row=ext_new_row, column=6, value="Fechado")
+            ext_final_ws.cell(row=ext_new_row, column=7, value="Fechado")
         else:
-            ext_final_ws.cell(row=ext_new_row, column=6, value="Aberto")
-        ext_final_ws.cell(row=ext_new_row, column=7, value= relatorio[f"B{cliente.row}"].value)
-        ext_final_ws.cell(row=ext_new_row, column=8, value= relatorio[f"D{cliente.row}"].value)
-        ext_final_ws.cell(row=ext_new_row, column=9, value= relatorio[f"G{cliente.row}"].value)
-        ext_final_ws.cell(row=ext_new_row, column=10,
+            ext_final_ws.cell(row=ext_new_row, column=7, value="Aberto")
+        ext_final_ws.cell(row=ext_new_row, column=8, value= relatorio[f"B{cliente.row}"].value)
+        ext_final_ws.cell(row=ext_new_row, column=9, value= relatorio[f"D{cliente.row}"].value)
+        ext_final_ws.cell(row=ext_new_row, column=10, value= relatorio[f"G{cliente.row}"].value)
+        ext_final_ws.cell(row=ext_new_row, column=11,
             value =
             datetime.datetime(
                 year=int(fdate[2]),
