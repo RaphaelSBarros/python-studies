@@ -24,10 +24,11 @@ for file in folder:
         UPDATE = load_workbook(filename=file_path, data_only=True).active
 ADDED=0
 for chamado in REPORT["B"][2:]:
+    JIRA=[]
     for nr_chamado in UPDATE["Q"][1:]:
-        if str(nr_chamado.value) == str(chamado.value) and REPORT[f"C{chamado.row}"].value is None:
-            REPORT[f"C{chamado.row}"].value = UPDATE[f"A{nr_chamado.row}"].value
-            print(f"Chamado: {chamado.value}, ID Jira: {UPDATE[f"A{nr_chamado.row}"].value}")
+        if str(nr_chamado.value) == str(chamado.value):
+            JIRA.append(UPDATE[f"A{nr_chamado.row}"].value)
             ADDED+=1
+    REPORT[f"C{chamado.row}"].value = ", ".join(JIRA)
 REPORT_WB.save("teste.xlsx")
 print(f"Atualização finalizada com {ADDED} jiras identificados")
