@@ -53,7 +53,6 @@ for x, title in enumerate(titles):
 
 existentes = [] # Armazenando quais os chamados existentes no relatório
 UPDATE_COUNTER=0 # Contagem dos chamados com atualização
-UPDATED=[]
 for chamado in REPORT["B"][2:]:
     if chamado.value is None:
         break
@@ -68,7 +67,6 @@ for chamado in REPORT["B"][2:]:
         if (atualizar.value == chamado.value
             and
             UPDATE[f"E{atualizar.row}"].value != REPORT[f"F{chamado.row}"].value):
-            UPDATED.append(atualizar.value)
             UPDATE_COUNTER+=1
             final_ws.cell(row=new_row, column=6, value=UPDATE[f"E{atualizar.row}"].value)
             final_ws.cell(row=new_row, column=8, value=UPDATE[f"G{atualizar.row}"].value)
@@ -77,13 +75,10 @@ for chamado in REPORT["B"][2:]:
             final_ws.cell(row=new_row, column=11, value=UPDATE[f"J{atualizar.row}"].value)
             final_ws.cell(row=new_row, column=12, value=UPDATE[f"K{atualizar.row}"].value)
             final_ws.cell(row=new_row, column=13, value=UPDATE[f"L{atualizar.row}"].value)
-            print(f"Chamado Atualizado: {chamado.value}")
 
 COUNTER = 0
-ADDED=[]
 for novos in UPDATE["B"][1:]:
     if novos.value not in existentes:
-        ADDED.append(novos.value)
         COUNTER+=1
         new_row = final_ws.max_row+1
         for row in final_ws[f"A{new_row}:D{new_row}"]:
@@ -102,9 +97,3 @@ final_wb.save(f"data/suporte_sonepar_final_{yesterday}.xlsx")
 
 # Apenas para conferência do total de informações
 print(f"Projeto Finalizado com:\n{UPDATE_COUNTER} atualizações e {COUNTER} adições nos dados")
-print("---------------------\n Chamados Adicionados")
-for c in ADDED:
-    print(c)
-print("---------------------\n Chamados Atualizados")
-for c in UPDATED:
-    print(c)
