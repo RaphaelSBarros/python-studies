@@ -37,6 +37,11 @@ class Heroi(Personagem):
     def exibir_detalhes(self):
         return f"{super().exibir_detalhes()}\nHabilidade: {self.get_habilidade()}\n"
     
+    def ataque_especial(self, alvo):
+        dano = self.get_nivel() * 5
+        alvo.receber_ataque(dano)
+        print(f"{self.get_nome()} usou a habilidade especial {self.get_habilidade()} em {alvo.get_nome()} e causou {dano} de dano!\n")
+    
 class Inimigo(Personagem):
     def __init__(self, nome, vida, nivel, tipo):
         super().__init__(nome, vida, nivel)
@@ -66,7 +71,7 @@ class Jogo:
             if escolha == "1":
                 self.heroi.atacar(self.inimigo)
             elif escolha == "2":
-                print("ataque especial")
+                self.heroi.ataque_especial(self.inimigo)
             else:
                 print("Escolha inválida")
 
