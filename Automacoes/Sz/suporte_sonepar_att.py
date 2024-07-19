@@ -2,11 +2,7 @@
     Automação
 '''
 
-import datetime
-import os
-
-from openpyxl import load_workbook, Workbook
-import pandas as pd
+from module import *
 
 FOLDER_PATH = "C:/Users/P0589/Downloads/Suporte_Sonepar"
 folder = os.listdir(FOLDER_PATH)

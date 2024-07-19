@@ -1,11 +1,17 @@
-'''
-    Automação
+'''Automação de Preenchimento das informações recebidas pelo Azure.
+
+    Passo a passo:
+    1. Acesse o ambiente Azure
+    2. Baixe as visões diárias de cada projeto em csv
+    3. Armazene todos os 8 arquivos em uma pasta
+    4. Rode o programa
+    5. Selecione a pasta com os arquivos
+    6. Irá gerar um novo arquivo .xlsx dentro da pasta
+    7. Abra o arquivo, copie e cole as informações e cole dentro da planilha do google sheets
+    8. Com isso, você terá completado o preenchimento das informações da aba QA_Outsourcing
 '''
 
-import datetime
-import os
-from openpyxl import load_workbook, Workbook
-import pandas as pd
+from module import *
 
 # Funcionando
 

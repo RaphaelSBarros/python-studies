@@ -1,12 +1,8 @@
-'''
-    Automação
+''' Automação de Preenchimento das informações recebidas pelo SoftDesk.
+
 '''
 
-from tkinter import filedialog
-import datetime
-import os
-from openpyxl import load_workbook, Workbook
-import pandas as pd
+from module import *
 
 # Precisa automatizar isso?
 
@@ -24,7 +20,7 @@ final_wb.create_sheet("suporte_cliente_externo")
 ext_final_ws = final_wb["suporte_cliente_externo"]
 
 int_titles =[
-        "Dia", 
+        "Aberto", 
         "Chamado", 
         "Sistema", 
         "Area", 
@@ -36,7 +32,7 @@ int_titles =[
         "SLA Primeiro Atendimento"
     ]
 ext_titles =[
-        "Dia", 
+        "Aberto", 
         "Chamado",
         "ID Jira",
         "Sistema", 
@@ -49,10 +45,6 @@ ext_titles =[
         "SLA Primeiro Atendimento"
     ]
 
-yesterday=(datetime.date.today() - datetime.timedelta(days=1))
-if yesterday.strftime("%A") == "Sunday":
-    yesterday=(datetime.date.today() - datetime.timedelta(days=3))
-
 for x, title in enumerate(int_titles):
     int_final_ws.cell(row=1, column=x+1, value=title)
 
@@ -63,48 +55,39 @@ for cliente in relatorio["C"][1:]:
     int_new_row = int_final_ws.max_row+1
     ext_new_row = ext_final_ws.max_row+1
 
-    itime = relatorio[f"O{cliente.row}"].value.split(":")
-    ftime = relatorio[f"N{cliente.row}"].value.split(":")
+    iD,iM,iY,ihh,imm,iss = [int(x) for x in relatorio[f"M{cliente.row}"].value.split("/")]+[int(x) for x in relatorio[f"O{cliente.row}"].value.split(":")]
+    idate = datetime.datetime(iY,iM,iD,ihh,imm,iss)
 
-    idate = relatorio[f"M{cliente.row}"].value.split("/")
-    fdate = relatorio[f"L{cliente.row}"].value.split("/")
+    try:
+        fD,fM,fY,fhh,fmm,fss = [int(x) for x in relatorio[f"L{cliente.row}"].value.split("/")]+[int(x) for x in relatorio[f"N{cliente.row}"].value.split(":")]
+        fdate = datetime.datetime(fY,fM,fD,fhh,fmm,fss)
+    except:
+        fdate = None
+
+    fechamento = ""
+    if relatorio[f"K{cliente.row}"].value is not None:
+        fechamento = [int(x) for x in relatorio[f"K{cliente.row}"].value.split("/")]
+        fechamento = datetime.datetime(fechamento[2], fechamento[1], fechamento[0])
 
     if cliente.value == "SZ Soluções":
-        int_final_ws.cell(row=int_new_row, column=1, value=yesterday)
+        int_final_ws.cell(row=int_new_row,column=1,value= idate)
         int_final_ws.cell(row=int_new_row, column=2, value= relatorio[f"A{cliente.row}"].value)
         int_final_ws.cell(row=int_new_row, column=3, value= cliente.value)
         int_final_ws.cell(row=int_new_row, column=4, value= relatorio[f"E{cliente.row}"].value)
         int_final_ws.cell(row=int_new_row, column=5, value= relatorio[f"H{cliente.row}"].value)
-        if relatorio[f"F{cliente.row}"].value in ("Encerrado"):
-            int_final_ws.cell(row=int_new_row, column=6, value="Fechado")
-        else:
+        if fechamento == "":
             int_final_ws.cell(row=int_new_row, column=6, value="Aberto")
+        else:   
+            int_final_ws.cell(row=int_new_row, column=6, value="Fechado")
         int_final_ws.cell(row=int_new_row, column=7, value= relatorio[f"D{cliente.row}"].value)
         int_final_ws.cell(row=int_new_row, column=8, value= relatorio[f"B{cliente.row}"].value)
-        int_final_ws.cell(row=int_new_row, column=9, value= relatorio[f"G{cliente.row}"].value)
-        int_final_ws.cell(row=int_new_row, column=10,
-            value= datetime.datetime(
-                year=int(fdate[2]),
-                month=int(fdate[1]),
-                day=int(fdate[0]),
-                hour=int(ftime[0]),
-                minute=int(ftime[1]),
-                second=int(ftime[2])
-            ) -
-            datetime.datetime(
-                year=int(idate[2]),
-                month=int(idate[1]),
-                day=int(idate[0]),
-                hour=int(itime[0]),
-                minute=int(itime[1]),
-                second=int(itime[2])
-            )
-        )
+        int_final_ws.cell(row=int_new_row, column=9, value= fechamento)
+        int_final_ws.cell(row=int_new_row, column=10,value= fdate - idate)
     else:
-        ext_final_ws.cell(row=ext_new_row, column=1, value=yesterday)
+        ext_final_ws.cell(row=ext_new_row, column=1, value= idate)
         ext_final_ws.cell(row=ext_new_row, column=2, value= relatorio[f"A{cliente.row}"].value)
         ext_final_ws.cell(row=ext_new_row, column=3, value="") # ID JIRA
-        if "Sonepar" in cliente.value:
+        if cliente.value is not None and "Sonepar" in cliente.value:
             split = [x for x in cliente.value.split(" ") if len(x) > 1]
             ext_final_ws.cell(row=ext_new_row, column=4, value= split[0])
             ext_final_ws.cell(row=ext_new_row, column=5, value= split[1])
@@ -112,31 +95,14 @@ for cliente in relatorio["C"][1:]:
             ext_final_ws.cell(row=ext_new_row, column=4, value=relatorio[f"I{cliente.row}"].value)
             ext_final_ws.cell(row=ext_new_row, column=5, value= relatorio[f"C{cliente.row}"].value)
         ext_final_ws.cell(row=ext_new_row, column=6, value= relatorio[f"E{cliente.row}"].value)
-        if relatorio[f"F{cliente.row}"].value in ("Encerrado", "Fechado pelo usuário"):
-            ext_final_ws.cell(row=ext_new_row, column=7, value="Fechado")
-        else:
+        if fechamento == "":
             ext_final_ws.cell(row=ext_new_row, column=7, value="Aberto")
+        else:
+            ext_final_ws.cell(row=ext_new_row, column=7, value="Fechado")
         ext_final_ws.cell(row=ext_new_row, column=8, value= relatorio[f"B{cliente.row}"].value)
         ext_final_ws.cell(row=ext_new_row, column=9, value= relatorio[f"D{cliente.row}"].value)
-        ext_final_ws.cell(row=ext_new_row, column=10, value= relatorio[f"G{cliente.row}"].value)
-        ext_final_ws.cell(row=ext_new_row, column=11,
-            value =
-            datetime.datetime(
-                year=int(fdate[2]),
-                month=int(fdate[1]),
-                day=int(fdate[0]),
-                hour=int(ftime[0]),
-                minute=int(ftime[1]),
-                second=int(ftime[2])
-            ) -
-            datetime.datetime(
-                year=int(idate[2]),
-                month=int(idate[1]),
-                day=int(idate[0]),
-                hour=int(itime[0]),
-                minute=int(itime[1]),
-                second=int(itime[2])
-            )
-        )
+        ext_final_ws.cell(row=ext_new_row, column=10, value= fechamento)
+        if fdate and idate:
+            ext_final_ws.cell(row=ext_new_row, column=11, value = fdate - idate)
 
 final_wb.save("data/suporte_cliente.xlsx")

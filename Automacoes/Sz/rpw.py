@@ -2,10 +2,7 @@
     Extração dos RPWs e alocação em linhas de planilhas
 '''
 
-from tkinter import filedialog
-from openpyxl import load_workbook, Workbook
-#import pandas as pd
-
+from module import *
 
 file_path = filedialog.askopenfilename()
 rpw_data = load_workbook(filename=file_path, data_only=True)['RPW']
@@ -32,7 +29,7 @@ for row in rpw_data["B"][1:]:
             if len(rpw) > 1 and "/" not in rpw:
                 new_row = ws.max_row+1
                 ws.cell(row=new_row, column=1, value=rpw_data[f"A{row.row}"].value)
-                ws.cell(row=new_row, column=2, value=rpw)
+                ws.cell(row=new_row, column=2, value=rpw.upper())
                 if "NOR" in rpw:
                     ws.cell(row=new_row, column=3, value="Nortel")
                 else:
