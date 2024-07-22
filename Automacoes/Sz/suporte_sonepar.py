@@ -53,7 +53,7 @@ for x, title in enumerate(titles):
 for id_inc in incident_data["B"][1:]: # Percorre todos os IDs de chamados na Coluna B da planilha
     new_row = final_ws.max_row+1 # Próxima linha vazia a ser inserido os dados
     COLUMN=1
-    # Preenche os dados das Colunas A, B, C D da planilha de incidentes na planilha final
+    # Preenche os dados das Colunas A, B, C D... da planilha de incidentes na planilha final
     for row in incident_data[f"A{id_inc.row}:I{id_inc.row}"]:
         for cell in row:
             final_ws.cell(row=new_row, column=COLUMN, value=cell.value)
@@ -69,7 +69,7 @@ for id_inc in incident_data["B"][1:]: # Percorre todos os IDs de chamados na Col
 
 # Faz a mesma coisa só que para os dados de Itens Requisitados
 for id_ritm in requisiton_data["B"][1:]:
-    new_row = final_ws.max_row+1 # Próxima linha vazia a ser inserido os dados
+    new_row = final_ws.max_row+1
     COLUMN=1
     for row in requisiton_data[f"A{id_ritm.row}:I{id_ritm.row}"]:
         for cell in row:
@@ -79,10 +79,6 @@ for id_ritm in requisiton_data["B"][1:]:
         if id_chamado.value == id_ritm.value:
             final_ws.cell(row=new_row, column=COLUMN, value=bulk_sla[f"I{id_chamado.row}"].value)
             final_ws.cell(row=new_row, column=COLUMN+1, value=bulk_sla[f"H{id_chamado.row}"].value/86400)
-
-#os.remove(f"{FOLDER_PATH}/task_sla.xlsx")
-#os.remove(f"{FOLDER_PATH}/incident.xlsx")
-#os.remove(f"{FOLDER_PATH}/sc_req_item.xlsx")
 
 final_wb.save(f"{FOLDER_PATH}/suporte_sonepar_att_{yesterday}.xlsx")
 print("Processo Finalizado!")
