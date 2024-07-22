@@ -1,5 +1,16 @@
 ''' Automação de Preenchimento das informações recebidas pelo SoftDesk.
-
+    Passo a passo:
+    1. Acessar o SoftDesk como Atendente
+    2. Clicar no menu hamburguer
+    3. Informação
+    4. Clicar no lápis(Editar relatório)
+    5. Avançar
+    6. Alterar a data de abertura(sd_chamado.da_chamado) para o período que desejar
+    7. Filtrar
+    8. Excel
+    9. Rode o programa
+    10. Selecione o arquivo baixado
+    11. Pronto, irá criar um novo arquivo .xlsx com as informações separadas em cliente interno e externo
 '''
 
 from module import *

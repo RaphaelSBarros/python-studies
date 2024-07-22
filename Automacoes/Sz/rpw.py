@@ -1,5 +1,9 @@
-'''
-    Extração dos RPWs e alocação em linhas de planilhas
+'''Automação da extração dos RPWs dentro da planilha de Auditoria
+    Passo a passo:
+    1. Baixar a planilha de Auditoria/Projetos
+    2. Rodar o programa
+    3. Escolher o arquivo baixado
+    4. Pronto, irá separar os RPWs em linhas diferentes para cada ocorrência registrada em um novo arquivo .xlsx.
 '''
 
 from module import *

@@ -1,5 +1,14 @@
-'''
-    Automação
+'''Automação de Preenchimento das informações recebidas pelo ServiceNow.
+    Passo a passo: 
+    1. Baixar as informações dos Incidentes da Query: https://soneparprod.service-now.com/nav_to.do?uri=%2Fincident_list.do%3Fsysparm_query%3Dopened_atONYesterday@javascript:gs.beginningOfYesterday()@javascript:gs.endOfYesterday()%5Ebusiness_service%3D30318b1bc35b7954c354254ce00131d3%26sysparm_first_row%3D1%26sysparm_view%3Dess
+    2. Baixar as informações das Requisições da Query: https://soneparprod.service-now.com/nav_to.do?uri=%2Fsc_req_item_list.do%3Fsysparm_query%3Drequest.opened_atONYesterday@javascript:gs.beginningOfYesterday()@javascript:gs.endOfYesterday()%5Ebusiness_service%3D30318b1bc35b7954c354254ce00131d3%26sysparm_first_row%3D1%26sysparm_view%3Dess
+    ***Caso for baixar as informações em uma segunda-feira, terá que alterar a data de abertura para entre sexta e domingo
+    3. Baixas as informações do SLA das tarefas: https://soneparprod.service-now.com/nav_to.do?uri=sys_report_template.do%3Fjvar_report_id%3D6ce3ea2aebe64e543e0af095dad0cdd9
+    *** O período precisa ser o mesmo dos incidentes e requisiçoes
+    4. Colocar os 3 arquivos numa mesma pasta
+    5. Rode o programa
+    6. Selecione a pasta em que os arquivos se encontram
+    7. Pronto, as informações serão agrupadas e inseridas o SLA em cada chamado.
 '''
 
 from module import *
@@ -12,7 +21,7 @@ yesterday=(datetime.date.today() - datetime.timedelta(days=1))
 if yesterday.strftime("%A") == "Sunday":
     yesterday=(datetime.date.today() - datetime.timedelta(days=3))
 
-FOLDER_PATH = "C:/Users/P0589/Downloads/Suporte_Sonepar"
+FOLDER_PATH = filedialog.askdirectory()
 folder = os.listdir(FOLDER_PATH)
 for file in folder:
     file_path = os.path.join(FOLDER_PATH, file)
